@@ -19,6 +19,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
     $scope.user = $firebaseObject(ref.child('users').child(uid));
     
     $scope.course = $firebaseObject(ref.child('courses').child(courseId));
+    $scope.lessons = $firebaseArray(ref.child('courses').child(courseId).child('content'));
     $scope.course.$loaded(function(data) {
       $scope.courseDescription = data.description;
     });
@@ -38,7 +39,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
         'title': $scope.urlTitle,
         'url': $scope.newUrl,
         'type': 'url',
-        'done': 'false'
+        'done': false
       });
       $scope.newUrl = "";
       $scope.urlTitle = "";
@@ -49,7 +50,8 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
         'title': $scope.course.title,
         'description': $scope.course.description,
         'uid': $scope.course.uid,
-        'content': $scope.course.content
+        'content': $scope.course.content,
+        'length': $scope.lessons.length
       });
       ref.child('courses').child(courseId).remove();
     };

@@ -1,7 +1,15 @@
-<div id="login">
-  <h1>Log In</h1>
-  <input class='form-control' type="email" ng-model="email" placeholder="Email">
-  <input class='form-control' type="password" ng-model="password" placeholder="Password">
-  <button class="btn btn-lg" ng-click="login()">Log In</button>
-  <button class="btn btn-lg" ng-click="newUser()">Create Account</button>
+<div class="wrapper">
+  <div class="login">
+    <span class="ion-ios-bookmarks"></span>
+    <h1>LEXA</h1>
+    
+    <form class="form">
+      <input type="text" placeholder="Email" ng-model="email">
+      <input type="password" placeholder="Password" ng-model="password">
+      <button id="login-button" ng-click="login()">Login</button>
+      <div class="newUser">
+        <a href="#/create_account">New user? Create an account.</a>
+      </div>
+    </form>
+  </div>
 </div>

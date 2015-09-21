@@ -30,8 +30,12 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
         'description': course.description,
         'uid': course.uid,
         'content': course.content,
-        'done': false
+        'done': false,
+        'id': course.$id,
+        'length': course.length,
+        'completed': 0
       });
+      ref.child('users').child(uid).child('courseList').push({'id': course.$id});
     };
 
   }]);

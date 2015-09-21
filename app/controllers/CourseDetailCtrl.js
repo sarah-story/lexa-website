@@ -13,6 +13,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
   }])
   .controller('CourseDetailCtrl',["$scope","$location","currentAuth","$firebaseObject","$firebaseArray","$firebaseAuth", "$routeParams",function($scope, $location, currentAuth, $firebaseObject, $firebaseArray, $firebaseAuth, $routeParams) {
     
+    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     var courseId = $routeParams.id;
     var uid = currentAuth.uid;
     var ref = new Firebase("https://lexa.firebaseio.com");
@@ -23,6 +24,11 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
 
     $scope.unAuth = function() {
       ref.unauth();
+    }
+
+    $scope.setLesson = function(lesson) {
+      $scope.lesson = lesson;
+      $('#myModal').modal('show');
     }
 
   }]);

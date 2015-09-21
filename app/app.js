@@ -15,8 +15,9 @@ define([
   './controllers/MyCourseDetailCtrl',
   './controllers/MyLessonDetailCtrl',
   './factories/Auth',
-  './filters/unsafe'
-  ], function(angular, ngRoute, _firebase, angularfire, LoginCtrl, CreateAccountCtrl, HomeCtrl, CreateCoursesCtrl, CreateCourseDetailCtrl, CreateLessonDetailCtrl, CourseDetailCtrl, LessonDetailCtrl, MyCourseDetailCtrl, MyLessonDetailCtrl, Auth, unsafe) {
+  './filters/unsafe',
+  './filters/url'
+  ], function(angular, ngRoute, _firebase, angularfire, LoginCtrl, CreateAccountCtrl, HomeCtrl, CreateCoursesCtrl, CreateCourseDetailCtrl, CreateLessonDetailCtrl, CourseDetailCtrl, LessonDetailCtrl, MyCourseDetailCtrl, MyLessonDetailCtrl, Auth, unsafe, url) {
     return angular.module('LexaApp', [
       "ngRoute",
       "firebase",
@@ -31,7 +32,8 @@ define([
       "LexaApp.MyCourseDetailCtrl",
       "LexaApp.MyLessonDetailCtrl",
       "LexaApp.Auth",
-      "LexaApp.unsafe"
+      "LexaApp.unsafe",
+      "LexaApp.url"
     ]).run(["$rootScope", "$location", function($rootScope, $location) {
       $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
         // We can catch the error thrown when the $requireAuth promise is rejected
