@@ -1,0 +1,28 @@
+<div class="container">
+  <span class="search">
+    <input ng-model="searchText"></input>
+    <button><i class="ion-search"></i></button>
+  </span>
+
+  <h3 class="sectionHeader">Library</h3><hr>
+  <div class="row">
+    <div class="col-md-4" ng-repeat="course in libraryCourses | courseList:userCourses | filter: searchText">
+      <div class="libraryCard">
+        <span ng-click="takeCourse(course)" class="ion-plus" data-toggle="tooltip" data-placement="left" title="Take Course"></span>
+        <div class="libImage" style="background-image: url({{course.image}})">
+          <a href="#/view_course/{{course.$id}}">
+            <div class="overlay2">
+              <span>{{course.title}}</span>
+            </div>
+          </a>
+        </div>
+        <hr>
+        <p>{{course.description}}</a>
+      </div>
+    </div>
+  </div>
+</div>
+<a href="#/library" class="btn btn-circle btn-lg library second activeNav" data-toggle="tooltip" data-placement="left" title="Find Courses"><span class="ion-ios-book"></span></a>
+<a ng-show="user.editor" href="#/create_courses" class="btn btn-circle btn-lg create fourth" data-toggle="tooltip" data-placement="left" title="Create Courses"><span class="ion-edit"></span></a>
+<a href="#/login" class="btn btn-circle btn-lg settings first" data-toggle="tooltip" data-placement="left" title="Log Out" ng-click="unAuth()"><span class="ion-log-out"></span></a>
+<a href="#/" class="btn btn-circle btn-lg home third" data-toggle="tooltip" data-placement="left" title="My Courses"><span class="ion-home"></span></a>

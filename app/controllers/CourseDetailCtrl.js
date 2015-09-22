@@ -31,5 +31,20 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
       $('#myModal').modal('show');
     }
 
+    $scope.takeCourse = function() {
+      ref.child('users').child(uid).child('courses').push({
+        'title': $scope.course.title,
+        'description': $scope.course.description,
+        'uid': $scope.course.uid,
+        'content': $scope.course.content,
+        'done': false,
+        'id': $scope.course.$id,
+        'length': $scope.course.length,
+        'completed': 0,
+        'image': $scope.course.image
+      });
+      ref.child('users').child(uid).child('courseList').push($scope.course.$id);
+    };
+
   }]);
 });

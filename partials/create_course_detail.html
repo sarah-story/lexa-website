@@ -1,73 +1,131 @@
-<nav class="navbar navbar-default navbar-static-top">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+<div class="container" style="margin-top: 30px; margin-bottom: 30px;">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="libImage" ng-if="course.image" style="background-image: url({{ course.image }})"></div>
+      <div class="libImage" ng-if="!course.image" style="background-image: url(http://lorempixel.com/200/400/cats)"></div>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name}}<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#/">Home</a></li>
-            <li><a href="#">Courses I'm Taking</a></li>
-            <li ng-show="user.editor"><a href="#/create_courses">Courses I'm Creating</a></li>
-            <li><a href="#/login" ng-click="unAuth()">Log Out</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-<div class="container">
-  <h2>{{course.title}}</h2>
-  <div class="form-group">
-    <label>Course Description:</label>
-    <textarea class="form-control" ng-model="courseDescription"></textarea>
-  </div>
-  <button class="btn btn-block" style="margin-bottom: 20px;" ng-click="saveDescription()">Save</button>
-
-  <div class="panel panel-default" ng-repeat="lesson in lessons">
-    <div class="panel-heading">
-      <h3 class="panel-title"><a href="#/create_course/{{course.$id}}/viewLesson/{{lesson.$id}}">{{lesson.title}}</a></h3>
-    </div>
-    <div class="panel-body" style="height: 100px; overflow: hidden; text-overflow: ellipsis;">
-      <div ng-bind-html="lesson.data | unsafe"></div>
-    </div>
-    <div class="panel-footer"><a target="_blank" href="{{lesson.url}}">{{lesson.url}}</a></div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Add Content:</h3>
-    </div>
-    <div class="panel-body">
-      <p>Use the Google Chrome browser extension</p>
-      <p>or enter url:</p>
+    <div class="col-md-8 courseMeta">
       <div class="form-group">
         <label>Title:</label>
-        <input type="text" class="form-control" ng-model="urlTitle">
+        <input class="form-control" ng-model="course.title" ng-change="course.$save()">
       </div>
       <div class="form-group">
-        <label>URL:</label>
-        <input type="text" class="form-control" ng-model="newUrl">
+        <label>Course Description:</label>
+        <textarea class="form-control" ng-model="course.description" ng-change="course.$save()"></textarea>
       </div>
-      <button class="btn btn-block" ng-click="addUrl()">Add URL</button>
+      <div class="form-group">
+        <label>Image URL:</label>
+        <input class="form-control" ng-model="course.image" ng-change="course.$save()">
+      </div>
+    </div>
+  </div>
+  
+  <div class="timelineContainer container">
+    <div class="row">
+      <div class="col-lg-12">
+        <ul class="timeline">
+          <li ng-repeat="lesson in lessons" ng-class="$even ? '' : 'timeline-inverted'">
+            <div class="timeline-image" ng-click="setLesson(lesson)">
+              <span class="icon ion-document-text" ng-show="lesson.type=='text'"></span>
+              <span class="icon ion-headphone" ng-show="lesson.type=='audio'"></span>
+              <span class="icon ion-social-youtube" ng-show="lesson.type=='video'"></span>
+              <span class="icon ion-link" ng-show="lesson.type=='url'"></span>
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <a class="subheading" ng-click="setLesson(lesson)">{{lesson.title}}</a>
+              </div>
+              <div class="timeline-body">
+              </div>
+            </div>
+            <div class="line"></div>
+          </li>
+          <li>
+            <div class="timeline-image done" ng-click="addContent()">
+              <span class="icon ion-plus"></span>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <a href="#/create_courses"><button class="btn btn-block" ng-click="publishCourse()">Publish Course</button></a>
+</div>
+
+<div class="modal fade" id="addContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Content</h4>
+      </div>
+      <div class="modal-body">
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+          <ul class="nav nav-tabs">
+            <li class="active" id="text"><a href="#tab1" data-toggle="tab">Text</a></li>
+            <li id="html"><a href="#tab2" data-toggle="tab">URL</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+              <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" ng-model="textTitle">
+              </div>
+              <div class="form-group">
+                <label>Content</label>
+                <textarea class="form-control" rows="10" ng-model="text"></textarea>
+              </div>
+              <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" ng-click="textInput='text'">Text</button>
+                <button type="button" class="btn btn-default" ng-click="textInput='html'">HTML</button>
+              </div>
+            </div>
+            <div class="tab-pane" id="tab2">
+              <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" ng-model="urlTitle">
+              </div>
+              <div class="form-group">
+                <label>URL</label>
+                <input type="text" class="form-control" ng-model="url">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="saveLesson()" data-dismiss="modal">Save</button>
+      </div>    
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{lesson.title}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+          <ul class="nav nav-tabs">
+            <li class="active" id="text"><a href="#tab3" data-toggle="tab">Preview</a></li>
+            <li id="html"><a href="#tab4" data-toggle="tab">Edit</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab3">
+              <div ng-hide="lesson.type == 'url'" ng-bind-html="lesson.data | unsafe"></div>
+              <iframe ng-hide="lesson.type !== 'url'" src="{{lesson.data | url}}"></iframe>
+            </div>
+            <div class="tab-pane" id="tab4">
+              <textarea ng-model="lesson.data" class="form-control" rows="20" ng-change="lesson.$save()"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>    
+    </div>
+  </div>
 </div>

@@ -16,22 +16,15 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
     var courseId = $routeParams.id;
     var uid = currentAuth.uid;
     var ref = new Firebase("https://lexa.firebaseio.com");
-    $scope.user = $firebaseObject(ref.child('users').child(uid));
     
+    $scope.textInput = "text";
+    $scope.user = $firebaseObject(ref.child('users').child(uid)); 
     $scope.course = $firebaseObject(ref.child('courses').child(courseId));
     $scope.lessons = $firebaseArray(ref.child('courses').child(courseId).child('content'));
-    $scope.course.$loaded(function(data) {
-      $scope.courseDescription = data.description;
-    });
-    $scope.lessons = $firebaseArray(ref.child('courses').child(courseId).child('content'));
 
-    $scope.unAuth = function() {
-      ref.unauth();
+    $scope.addContent = function() {
+      $("#addContent").modal('show');
     }
-
-    $scope.saveDescription = function() {
-      ref.child('courses').child(courseId).child('description').set($scope.courseDescription);
-    };
 
     $scope.addUrl = function() {
       ref.child('courses').child(courseId).child('content').push({
@@ -45,13 +38,46 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
       $scope.urlTitle = "";
     }
 
+    $scope.saveLesson = function() {
+      if ($("#text").hasClass('active')) {
+        if ($scope.textInput == 'text') {
+          $scope.text = "<pre>" + $scope.text + "</pre>";
+        }
+        ref.child('courses').child(courseId).child('content').push({
+          'data': $scope.text,
+          'title': $scope.textTitle,
+          'url': 'Original Content',
+          'type': 'text',
+          'done': false
+        });
+        $scope.text = "";
+        $scope.textTitle = "";
+      } else {
+        ref.child('courses').child(courseId).child('content').push({
+          'data': $scope.url,
+          'title': $scope.urlTitle,
+          'url': $scope.url,
+          'type': 'url',
+          'done': false
+        });
+        $scope.url = "";
+        $scope.urlTitle = "";
+      }
+    };
+
+    $scope.setLesson = function(lesson) {
+      $scope.lesson = lesson;
+      $('#myModal').modal('show');
+    };
+
     $scope.publishCourse = function() {
       ref.child('publishedCourses').push({
         'title': $scope.course.title,
         'description': $scope.course.description,
         'uid': $scope.course.uid,
         'content': $scope.course.content,
-        'length': $scope.lessons.length
+        'length': $scope.lessons.length,
+        'image': $scope.course.image
       });
       ref.child('courses').child(courseId).remove();
     };

@@ -26,10 +26,15 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
     $scope.addCourse = function() {
       ref.child("courses").push({
         'title': $scope.newCourseTitle,
+        'description': $scope.description,
         'uid': uid
       });
       $scope.newCourseTitle = "";
     };
+
+    $scope.addModal = function() {
+      $("#addModal").modal('show');
+    }
 
   }]);
 });
