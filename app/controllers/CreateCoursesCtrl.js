@@ -30,6 +30,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
         'uid': uid
       });
       $scope.newCourseTitle = "";
+      $scope.description = "";
     };
 
     $scope.addModal = function() {

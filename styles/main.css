@@ -721,11 +721,8 @@ span.search :focus, span.search1 :focus {
   opacity: 1;
   -webkit-transition: 1.3s ease;
   transition: 1.3s ease;
+  white-space: normal;
 }
-
-/*.modal-body div {
-  white-space: pre-wrap;
-}*/
 
 .courseMeta {
   color: white;
