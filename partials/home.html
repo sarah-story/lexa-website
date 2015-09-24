@@ -6,18 +6,43 @@
   </div>
 </div>
 <div class="topImageWrapper">
-<div class="container">
-  <div class="card">
-    <h3 class="sectionHeader">In Progress</h3>
-    <span class="search1">
-      <input ng-model="searchText"></input>
-      <button><i class="ion-search"></i></button>
-    </span>
-    <hr>
-    <div class="DocumentList">
-        <ul class="list-inline">
-            <li class="DocumentItem" ng-repeat="course in userCourses | filter:{done: false} | filter: searchText">
-              <div class="courseList">
+  <div class="container">
+    <div class="card">
+      <h3 class="sectionHeader">In Progress</h3>
+      <span class="search1">
+        <input ng-model="searchText"></input>
+        <button><i class="ion-search"></i></button>
+      </span>
+      <hr>
+      <div class="DocumentList">
+          <ul class="list-inline">
+              <li class="DocumentItem my-repeat-animation" ng-repeat="course in userCourses | filter:{done: false} | filter: searchText">
+                <div class="courseList">
+                  <div class="libImage" style="background-image: url({{course.image}})">
+                    <a href="#/my_course/{{course.$id}}">
+                      <div class="overlay2">
+                        <span>{{course.title}}</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </li>
+          </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="margin-bottom: 30px;">
+    <div class="card">
+      <h3 class="sectionHeader">Completed Courses</h3>
+      <span class="search1">
+        <input ng-model="searchText"></input>
+        <button><i class="ion-search"></i></button>
+      </span>
+      <hr>
+      <div class="DocumentList">
+          <ul class="list-inline">
+              <li class="DocumentItem" ng-repeat="course in userCourses | filter:{done: true} | filter: searchText">
                 <div class="libImage" style="background-image: url({{course.image}})">
                   <a href="#/my_course/{{course.$id}}">
                     <div class="overlay2">
@@ -25,36 +50,11 @@
                     </div>
                   </a>
                 </div>
-              </div>
-            </li>
-        </ul>
+              </li>
+          </ul>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="container" style="margin-bottom: 30px;">
-  <div class="card">
-    <h3 class="sectionHeader">Completed Courses</h3>
-    <span class="search1">
-      <input ng-model="searchText"></input>
-      <button><i class="ion-search"></i></button>
-    </span>
-    <hr>
-    <div class="DocumentList">
-        <ul class="list-inline">
-            <li class="DocumentItem" ng-repeat="course in userCourses | filter:{done: true} | filter: searchText">
-              <div class="libImage" style="background-image: url({{course.image}})">
-                <a href="#/my_course/{{course.$id}}">
-                  <div class="overlay2">
-                    <span>{{course.title}}</span>
-                  </div>
-                </a>
-              </div>
-            </li>
-        </ul>
-    </div>
-  </div>
-</div>
 </div>
 <a href="#/library" class="btn btn-circle btn-lg library second" data-toggle="tooltip" data-placement="left" title="Find Courses"><span class="ion-ios-book"></span></a>
 <a ng-show="user.editor" href="#/create_courses" class="btn btn-circle btn-lg create fourth" data-toggle="tooltip" data-placement="left" title="Create Courses"><span class="ion-edit"></span></a>

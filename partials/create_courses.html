@@ -6,7 +6,7 @@
           <div ng-click="addModal()" class="plus-circle libImage"><span class="icon ion-plus"></span></div>
       </li>
       <li class="DocumentItem" ng-repeat="course in courses">
-        <div class="libImage" style="background: url({{course.image}})">
+        <div class="libImage" style="background-image: url({{course.image}})">
           <a href="#/create_course/{{course.$id}}">
             <div class="overlay2">
               <span>{{course.title}}</span>

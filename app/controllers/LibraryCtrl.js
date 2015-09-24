@@ -1,5 +1,5 @@
-define(['angular', 'ngRoute'], function(angular, ngRoute) {
-  return angular.module('LexaApp.LibraryCtrl', ['ngRoute'])
+define(['angular', 'ngRoute','ngAnimate'], function(angular, ngRoute, ngAnimate) {
+  return angular.module('LexaApp.LibraryCtrl', ['ngRoute', 'ngAnimate'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/library', {
       templateUrl: 'partials/library.html',
@@ -21,9 +21,10 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
       console.log('click');
       ref.unauth();
     };
-
+    $scope.tags = $firebaseArray(ref.child('tags'));
     $scope.libraryCourses = $firebaseArray(ref.child('publishedCourses'));
-    $scope.userCourses = $firebaseArray(ref.child('users').child(uid).child('courseList'));
+    $scope.course = {};
+    var list = $firebaseArray(ref.child('users').child(uid).child('courseList'));
 
     $scope.takeCourse = function(course) {
       ref.child('users').child(uid).child('courses').push({
@@ -35,10 +36,24 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
         'id': course.$id,
         'length': course.length,
         'completed': 0, 
-        'image': course.image
+        'image': course.image,
+        'tag': course.tag
       });
       ref.child('users').child(uid).child('courseList').push(course.$id);
-    };    
+    };
+
+    $scope.showDetail = function(course) {
+      $scope.course = course;
+      $('#detailModal').modal('show');
+    }
+
+    $scope.takenCourse = function(course) {
+      for (var i = 0; i < list.length; i++) {
+        if (course.$id === list[i].$value) {
+          return "disabled";
+        }
+      }
+    }    
 
   }]);
 });

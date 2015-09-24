@@ -1,23 +1,34 @@
-<div class="container">
-  <span class="search">
-    <input ng-model="searchText"></input>
-    <button><i class="ion-search"></i></button>
-  </span>
+<div class="wide" style="background-image: url(https://images.unsplash.com/45/tkLOe7nnQ7mnMsiuijBy_hm.jpg?q=80&fm=jpg&s=142204dd8fe157058081b8d9537cbb96)">
+  <div class="overlay3">
+    <div class="col-xs-3 line"><hr></div>
+    <div class="col-xs-6 lexa">LIBRARY</div>
+    <div class="col-xs-3 line"><hr></div>
+  </div>
+</div>
+<div class="topImageWrapper">
 
-  <h3 class="sectionHeader">Library</h3><hr>
-  <div class="row">
-    <div class="col-md-4" ng-repeat="course in libraryCourses | courseList:userCourses | filter: searchText">
-      <div class="libraryCard">
-        <span ng-click="takeCourse(course)" class="ion-plus" data-toggle="tooltip" data-placement="left" title="Take Course"></span>
-        <div class="libImage" style="background-image: url({{course.image}})">
-          <a href="#/view_course/{{course.$id}}">
-            <div class="overlay2">
-              <span>{{course.title}}</span>
-            </div>
-          </a>
-        </div>
-        <hr>
-        <p>{{course.description}}</a>
+  <div class="container" ng-repeat="tag in tags">
+    <div class="card">
+      <h3 class="sectionHeader">{{tag.$value}}</h3>
+      <span class="search1">
+        <input ng-model="searchText"></input>
+        <button><i class="ion-search"></i></button>
+      </span>
+      <hr>
+      <div class="DocumentList">
+          <ul class="list-inline">
+              <li class="DocumentItem my-repeat-animation" ng-animate="'animate'" ng-repeat="course in libraryCourses | filter:{tag: tag.$value} | filter: searchText">
+                <div class="courseList">
+                  <div class="libImage" style="background-image: url({{course.image}})">
+                    <a ng-click="showDetail(course)">
+                      <div class="overlay2">
+                        <span>{{course.title}}</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </li>
+          </ul>
       </div>
     </div>
   </div>
@@ -26,3 +37,31 @@
 <a ng-show="user.editor" href="#/create_courses" class="btn btn-circle btn-lg create fourth" data-toggle="tooltip" data-placement="left" title="Create Courses"><span class="ion-edit"></span></a>
 <a href="#/login" class="btn btn-circle btn-lg settings first" data-toggle="tooltip" data-placement="left" title="Log Out" ng-click="unAuth()"><span class="ion-log-out"></span></a>
 <a href="#/" class="btn btn-circle btn-lg home third" data-toggle="tooltip" data-placement="left" title="My Courses"><span class="ion-home"></span></a>
+
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{course.title}}</h4>
+      </div>
+      <div class="modal-body" style="height: 400px;">       
+        <div>{{course.description}}</div>
+        <h3>Lessons:</h3>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="lesson in course.content">
+            {{lesson.title}}
+            <span class="ion-document-text" ng-show="lesson.type=='text'" style="float: right;"></span>
+            <span class="ion-headphone" ng-show="lesson.type=='audio'" style="float: right;"></span>
+            <span class="ion-social-youtube" ng-show="lesson.type=='video'" style="float: right;"></span>
+            <span class="ion-link" ng-show="lesson.type=='url'" style="float: right;"></span>
+          </li>
+        </ul>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn" ng-click="takeCourse(course)" data-dismiss="modal" ng-class="takenCourse(course)" style="background-color: #b3c2bf;">Take Course</button>
+      </div>      
+    </div>
+  </div>
+</div>

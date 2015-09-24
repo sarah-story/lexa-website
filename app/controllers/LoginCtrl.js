@@ -6,7 +6,15 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
       controller: 'LoginCtrl'
     });
   }])
-  .controller('LoginCtrl', function($scope, $location) {
+  .controller('LoginCtrl', function($scope, $location, $rootScope) {
+    
+    $('#login-button').tooltip({
+      title: 'Incorrect Email or Password. Try again.',
+      trigger: 'manual',
+      placement: 'right'
+    });
+    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+
     var ref = new Firebase("https://lexa.firebaseio.com");
 
     $scope.login = function() {
@@ -16,6 +24,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
       }, function(error, authData) {
         if (error) {
           console.log("Login Failed!", error);
+          $("#login-button").tooltip('show');
         } else {
           console.log("Authenticated successfully with payload:", authData);
           $scope.authData = authData;

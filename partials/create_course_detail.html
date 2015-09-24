@@ -2,21 +2,29 @@
   <div class="row">
     <div class="col-md-4">
       <div class="libImage" ng-if="course.image" style="background-image: url({{ course.image }})"></div>
-      <div class="libImage" ng-if="!course.image" style="background-image: url(http://lorempixel.com/200/400/cats)"></div>
+      <div class="libImage" ng-if="!course.image" style="background-image: url(http://www.techonline.com/img/tmp/no-image-icon.jpg)"></div>
+      <div class="form-group">
+        <label>Image URL:</label>
+        <input id="imageInput" class="form-control" ng-model="course.image" ng-change="course.$save()">
+      </div>
     </div>
     <div class="col-md-8 courseMeta">
       <div class="form-group">
         <label>Title:</label>
-        <input class="form-control" ng-model="course.title" ng-change="course.$save()">
+        <input id="titleInput" class="form-control" ng-model="course.title" ng-change="course.$save()">
       </div>
       <div class="form-group">
         <label>Course Description:</label>
-        <textarea class="form-control" ng-model="course.description" ng-change="course.$save()"></textarea>
+        <textarea id="descriptionInput" class="form-control" ng-model="course.description" ng-change="course.$save()"></textarea>
       </div>
       <div class="form-group">
-        <label>Image URL:</label>
-        <input class="form-control" ng-model="course.image" ng-change="course.$save()">
+        <label>Category:</label>
+        <select id="tagInput" class="form-control" ng-model="course.tag" ng-change="course.$save()">
+          <option value=""></option>
+          <option ng-repeat="tag in tags" value="{{tag.$value}}">{{tag.$value}}</option>
+        </select>
       </div>
+      <button class="btn btn-block" style="background: #3b3a36; color: white; margin-top: 20px;" ng-click="reorder()">Reorder Course Content</button>
     </div>
   </div>
   
@@ -41,17 +49,26 @@
             <div class="line"></div>
           </li>
           <li>
-            <div class="timeline-image done" ng-click="addContent()">
+            <div class="timeline-image done" ng-click="addContent()" data-toggle="tooltip" title="Add Content">
               <span class="icon ion-plus"></span>
+            </div>
+            <div class="line"></div>
+          </li>
+          <li>
+            <div class="timeline-image done" ng-click="publishCourse()" data-toggle="tooltip" title="Publish Course">
+              <span class="icon ion-upload"></span>
             </div>
           </li>
         </ul>
       </div>
     </div>
   </div>
-
-  <a href="#/create_courses"><button class="btn btn-block" ng-click="publishCourse()">Publish Course</button></a>
 </div>
+
+<a href="#/library" class="btn btn-circle btn-lg library second" data-toggle="tooltip" data-placement="left" title="Find Courses"><span class="ion-ios-book"></span></a>
+<a ng-show="user.editor" href="#/create_courses" class="btn btn-circle btn-lg create fourth" data-toggle="tooltip" data-placement="left" title="Create Courses"><span class="ion-edit"></span></a>
+<a href="#/login" class="btn btn-circle btn-lg settings first" data-toggle="tooltip" data-placement="left" title="Log Out" ng-click="unAuth()"><span class="ion-log-out"></span></a>
+<a href="#/" class="btn btn-circle btn-lg home third" data-toggle="tooltip" data-placement="left" title="My Courses"><span class="ion-home"></span></a>
 
 <div class="modal fade" id="addContent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -70,16 +87,25 @@
             <div class="tab-pane active" id="tab1">
               <div class="form-group">
                 <label>Title</label>
-                <input type="text" class="form-control" ng-model="textTitle">
+                <input type="text" class="form-control" ng-model="textTitle" id="textTitle">
               </div>
               <div class="form-group">
                 <label>Content</label>
-                <textarea class="form-control" rows="10" ng-model="text"></textarea>
+                <textarea ng-show="textInput==='text'" class="form-control" rows="15" ng-model="text"></textarea>
+                <div ng-show="textInput!=='text'" style="height: 300px;" ng-model="text" ui-ace="{
+                useWrapMode : true,
+                mode: 'html'
+                }"></div>
               </div>
-              <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" ng-click="textInput='text'">Text</button>
-                <button type="button" class="btn btn-default" ng-click="textInput='html'">HTML</button>
-              </div>
+              <label class="radio-inline">
+                <input type="radio" ng-model="textInput" value="text"> Text
+              </label>
+              <label class="radio-inline">
+                <input type="radio" ng-model="textInput" value="html"> HTML
+              </label>
+              <label class="radio-inline">
+                <input type="radio" ng-model="textInput" value="markdown"> Markdown
+              </label>
             </div>
             <div class="tab-pane" id="tab2">
               <div class="form-group">
@@ -96,7 +122,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="saveLesson()" data-dismiss="modal">Save</button>
+        <button type="button" class="btn btn-primary" ng-click="saveLesson()">Save</button>
       </div>    
     </div>
   </div>
@@ -121,11 +147,42 @@
               <iframe ng-hide="lesson.type !== 'url'" src="{{lesson.data | url}}"></iframe>
             </div>
             <div class="tab-pane" id="tab4">
-              <textarea ng-model="lesson.data" class="form-control" rows="20" ng-change="lesson.$save()"></textarea>
+              <textarea ng-show="lesson.type!=='text'" ng-model="lesson.data" class="form-control" rows="20" ng-change="lesson.$save()"></textarea>
+              <div ng-show="lesson.type==='text' && !lesson.markdown" style="height: 400px;" ng-model="lesson.data" ng-change="lesson.$save()" ui-ace="{
+                useWrapMode : true,
+                mode: 'html'
+              }"></div>
+              <div ng-show="lesson.type==='text' && lesson.markdown" style="height: 400px;" ng-model="lesson.markdown" ng-change="compileMarkdown()" ui-ace="{
+                useWrapMode : true,
+                mode: 'html'
+              }"></div>
             </div>
           </div>
         </div>
-      </div>    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+        <button type="button" class="btn btn-danger" ng-click="lesson.$remove()" data-dismiss="modal">Delete</button>
+      </div>     
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="reorderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Drag and Drop to Reorder</h4>
+      </div>
+      <div class="modal-body" style="height: auto;">
+        <ul ui-sortable class="list-group" ng-model="lessons" style="cursor: pointer;">
+          <li ng-repeat="lesson in lessons" class="list-group-item">{{ lesson.title }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" ng-click="saveOrder()" data-dismiss="modal">Save</button>
+      </div>     
     </div>
   </div>
 </div>

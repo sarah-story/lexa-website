@@ -21,6 +21,10 @@
     "angular-filter": "~0.5.5",
     "angular-route": "~1.4.4",
     "angularfire": "~1.1.2",
-    "angular-sanitize": "~1.4.5"
+    "angular-sanitize": "~1.4.5",
+    "angular-ui-ace": "bower",
+    "marked": "~0.3.5",
+    "angular-ui-sortable": "~0.13.4",
+    "angular-animate": "~1.4.6"
   }
 }

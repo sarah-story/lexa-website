@@ -23,7 +23,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
     $scope.srcUrl = "";
     
     $scope.course = $firebaseObject(ref.child('users').child(uid).child('courses').child(courseId));
-    $scope.lessons = $firebaseArray(ref.child('users').child(uid).child('courses').child(courseId).child('content'));
+    $scope.lessons = $firebaseArray(ref.child('users').child(uid).child('courses').child(courseId).child('content').orderByChild('order'));
 
     $scope.unAuth = function() {
       ref.unauth();
