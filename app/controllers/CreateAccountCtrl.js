@@ -54,6 +54,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
           password : $scope.password
         }, function(error, userData) {
           if (error) {
+            $("#create-button").tooltip('show');
             console.log("Error creating user:", error);
           } else {
             ref.child('users').child(userData.uid).set({
@@ -66,7 +67,6 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
             }, function(error, authData) {
               if (error) {
                 console.log("Login Failed!", error);
-                $("#create-button").tooltip('show');
               } else {
                 $scope.authData = authData;
                 $location.path("#/").replace();
