@@ -29,7 +29,7 @@ define([
       "LexaApp.LibraryCtrl",
       "LexaApp.Auth",
       "LexaApp.unsafe",
-      "LexaApp.url", 
+      "LexaApp.url",
       "LexaApp.courseList",
       "LexaApp.sortable"
     ]).run(["$rootScope", "$location", function($rootScope, $location) {
@@ -46,6 +46,8 @@ define([
     }]).config(['$routeProvider', function($routeProvider) {
       //The main page is declared here, but all other routes are declared in
       //their controllers
-      $routeProvider.otherwise({redirectTo: '/'});
+      $routeProvider.when('/mobile', {
+        templateUrl: 'partials/mobile.html'
+      }).otherwise({redirectTo: '/'});
     }]);
   });
