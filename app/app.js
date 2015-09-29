@@ -9,7 +9,6 @@ define([
   './controllers/HomeCtrl',
   './controllers/CreateCoursesCtrl',
   './controllers/CreateCourseDetailCtrl',
-  './controllers/CreateLessonDetailCtrl',
   './controllers/MyCourseDetailCtrl',
   './controllers/LibraryCtrl',
   './factories/Auth',
@@ -17,7 +16,7 @@ define([
   './filters/url',
   './filters/courseList',
   './directives/sortable'
-  ], function(angular, ngRoute, _firebase, angularfire, LoginCtrl, CreateAccountCtrl, HomeCtrl, CreateCoursesCtrl, CreateCourseDetailCtrl, CreateLessonDetailCtrl, MyCourseDetailCtrl, LibraryCtrl, Auth, unsafe, url, courseList, sortable) {
+  ], function(angular, ngRoute, _firebase, angularfire, LoginCtrl, CreateAccountCtrl, HomeCtrl, CreateCoursesCtrl, CreateCourseDetailCtrl, MyCourseDetailCtrl, LibraryCtrl, Auth, unsafe, url, courseList, sortable) {
     return angular.module('LexaApp', [
       "ngRoute",
       "firebase",
@@ -26,7 +25,6 @@ define([
       "LexaApp.HomeCtrl",
       "LexaApp.CreateCoursesCtrl",
       "LexaApp.CreateCourseDetailCtrl",
-      "LexaApp.CreateLessonDetailCtrl",
       "LexaApp.MyCourseDetailCtrl",
       "LexaApp.LibraryCtrl",
       "LexaApp.Auth",

@@ -9,6 +9,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
   .controller('CreateAccountCtrl', function($scope, $location) {
     var ref = new Firebase("https://lexa.firebaseio.com");
 
+    //Tooltips for form validation
     $('#createName').tooltip({
       title: 'Name is required',
       trigger: 'manual',
@@ -31,10 +32,10 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
     });
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
+    //When create user button is clicked:
     $scope.create = function() {
-      console.log($scope.name);
-      console.log($scope.email);
-      console.log($scope.password);
+
+      //Check to make sure all fields have been filled in
       var validUser = true;
       if ($scope.name === undefined) {
         $("#createName").tooltip('show');
@@ -49,6 +50,7 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
         validUser = false;
       }
       if (validUser) {
+        //First create a new user
         ref.createUser({
           email    : $scope.email,
           password : $scope.password
@@ -57,10 +59,13 @@ define(['angular', 'ngRoute'], function(angular, ngRoute) {
             $("#create-button").tooltip('show');
             console.log("Error creating user:", error);
           } else {
+            //Save their information to the users array in firebase
             ref.child('users').child(userData.uid).set({
               'name': $scope.name,
-              'email': $scope.email
+              'email': $scope.email,
+              'new': true
             });
+            //Authenticate the user
             ref.authWithPassword({
               email    : $scope.email,
               password : $scope.password

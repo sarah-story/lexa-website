@@ -13,28 +13,34 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
   }])
   .controller('CreateCourseDetailCtrl',["$scope","$location","currentAuth","$firebaseObject","$firebaseArray","$firebaseAuth", "$routeParams","$sce",function($scope, $location, currentAuth, $firebaseObject, $firebaseArray, $firebaseAuth, $routeParams) {
     
+    //Initialize tooltips
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     var courseId = $routeParams.id;
     var uid = currentAuth.uid;
     var ref = new Firebase("https://lexa.firebaseio.com");
     
+    //Default value for type of input is text
     $scope.textInput = 'text';
     $scope.user = $firebaseObject(ref.child('users').child(uid)); 
     $scope.course = $firebaseObject(ref.child('courses').child(courseId));
     $scope.lessons = $firebaseArray(ref.child('courses').child(courseId).child('content').orderByChild('order'));
     $scope.tags = $firebaseArray(ref.child('tags'));
 
+    //Show modal to add content
     $scope.addContent = function() {
       $("#addContent").modal('show');
     }
 
+    //Compile markdown to HTML
     $scope.compileMarkdown = function() {
       $scope.lesson.data = marked($scope.lesson.markdown);
     }
 
+    //Save lesson to firebase
     $scope.saveLesson = function() {
       if ($("#text").hasClass('active')) {
         if ($scope.textInput === 'text') {
+          //Wrap in <pre> tags to keep formatting
           $scope.text = "<pre>" + $scope.text + "</pre>";
           ref.child('courses').child(courseId).child('content').push({
           'data': $scope.text,
@@ -45,7 +51,9 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
           'order': $scope.lessons.length+1
         });
         } else if ($scope.textInput === 'markdown') {
+          //save markdown in case user wants to edit it later
           $scope.markdown = $scope.text;
+          //complile markdown to HTML
           $scope.text = marked($scope.text);
           ref.child('courses').child(courseId).child('content').push({
             'data': $scope.text,
@@ -57,6 +65,7 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
             'order': $scope.lessons.length+1
           });
         } else {
+          //HTML
           ref.child('courses').child(courseId).child('content').push({
             'data': $scope.text,
             'title': $scope.textTitle,
@@ -66,10 +75,12 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
             'order': $scope.lessons.length+1
           });
         }
+        //Clear inputs and hide modal
         $scope.text = "";
         $scope.textTitle = "";
         $("#addContent").modal('hide');
       } else {
+        //url
         ref.child('courses').child(courseId).child('content').push({
           'data': $scope.url,
           'title': $scope.urlTitle,
@@ -77,12 +88,14 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
           'type': 'url',
           'done': false
         });
+        //Clear inputs and hide modal
         $("#addContent").modal('hide');
         $scope.url = "";
         $scope.urlTitle = "";
       }
     };
 
+    //When user clicks on a lesson, set $scope.lesson to equal that lesson and open the lesson detail modal
     $scope.setLesson = function(lesson) {
       $scope.lesson = $firebaseObject(ref.child('courses').child(courseId).child('content').child(lesson.$id));
       $('#myModal').modal('show');
@@ -92,6 +105,7 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
       $('#reorderModal').modal('show');
     }
 
+    //Save the new order of lessons to firebase after reorder
     $scope.saveOrder = function() {
       for (var i=0; i<$scope.lessons.length; i++) {
         $scope.lessons[i].order=i+1;
@@ -99,7 +113,10 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
       }
     }
 
+    //Publish course so that it can be seen in the library
     $scope.publishCourse = function() {
+
+      //Validate that all inputs have been filled
       var error = false;
       if (!$scope.course.title || $scope.course.title === "") {
         $("#titleInput").tooltip('show');
@@ -126,6 +143,7 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
         $("html, body").animate({ scrollTop: 0 }, "slow");
         error = true;
       }
+      //Push course to firebase
       if (!error) {
         ref.child('publishedCourses').push({
           'title': $scope.course.title,
@@ -136,11 +154,13 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
           'image': $scope.course.image,
           'tag': $scope.course.tag
         });
+        //Remove course from the editing array
         ref.child('courses').child(courseId).remove();
         $location.path("/create_courses");
       }
     };
 
+    //Declare tooltips
     $('#titleInput').tooltip({
       title: 'Title is required',
       trigger: 'manual'

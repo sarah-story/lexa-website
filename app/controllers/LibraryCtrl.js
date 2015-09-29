@@ -1,4 +1,4 @@
-define(['angular', 'ngRoute','ngAnimate'], function(angular, ngRoute, ngAnimate) {
+define(['angular', 'ngRoute','ngAnimate','bootstrapTour'], function(angular, ngRoute, ngAnimate, bootstrapTour) {
   return angular.module('LexaApp.LibraryCtrl', ['ngRoute', 'ngAnimate'])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/library', {
@@ -16,16 +16,17 @@ define(['angular', 'ngRoute','ngAnimate'], function(angular, ngRoute, ngAnimate)
     var uid = currentAuth.uid;
     var ref = new Firebase("https://lexa.firebaseio.com");
     $scope.user = $firebaseObject(ref.child('users').child(uid));
-
-    $scope.unAuth = function() {
-      console.log('click');
-      ref.unauth();
-    };
     $scope.tags = $firebaseArray(ref.child('tags'));
     $scope.libraryCourses = $firebaseArray(ref.child('publishedCourses'));
     $scope.course = {};
     var list = $firebaseArray(ref.child('users').child(uid).child('courseList'));
 
+    //Logout button
+    $scope.unAuth = function() {
+      ref.unauth();
+    };
+
+    //Add course to user's courses
     $scope.takeCourse = function(course) {
       ref.child('users').child(uid).child('courses').push({
         'title': course.title,
@@ -42,11 +43,15 @@ define(['angular', 'ngRoute','ngAnimate'], function(angular, ngRoute, ngAnimate)
       ref.child('users').child(uid).child('courseList').push(course.$id);
     };
 
+    //Show course detail for selected course
     $scope.showDetail = function(course) {
       $scope.course = course;
       $('#detailModal').modal('show');
     }
 
+
+    //Check to see if the user has taken the course.
+    //If they have, disable 'take course' button
     $scope.takenCourse = function(course) {
       for (var i = 0; i < list.length; i++) {
         if (course.$id === list[i].$value) {

@@ -11,7 +11,8 @@ require.config({
     ace: '../lib/bower_components/ace-builds/src-min-noconflict/ace',
     uiAce: '../lib/bower_components/angular-ui-ace/ui-ace.min',
     marked: '../lib/bower_components/marked/marked.min',
-    ngAnimate: '../lib/bower_components/angular-animate/angular-animate.min'
+    ngAnimate: '../lib/bower_components/angular-animate/angular-animate.min',
+    bootstrapTour: '../lib/bootstrap-tour'
   },
   shim: {
     'angular' : {'exports' : 'angular', deps: ['jquery']},
@@ -21,6 +22,7 @@ require.config({
     'bootstrap': {deps:['jquery','jqueryUi']},
     'uiAce': ['angular', 'ace'],
     'ngAnimate': ['angular'],
+    'bootstrap-tour': ['jquery', 'bootstrap'],
     '_firebase': {
       exports: 'Firebase'
     }
