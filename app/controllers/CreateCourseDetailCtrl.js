@@ -12,16 +12,16 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
     });
   }])
   .controller('CreateCourseDetailCtrl',["$scope","$location","currentAuth","$firebaseObject","$firebaseArray","$firebaseAuth", "$routeParams","$sce",function($scope, $location, currentAuth, $firebaseObject, $firebaseArray, $firebaseAuth, $routeParams) {
-    
+
     //Initialize tooltips
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     var courseId = $routeParams.id;
     var uid = currentAuth.uid;
     var ref = new Firebase("https://lexa.firebaseio.com");
-    
+
     //Default value for type of input is text
     $scope.textInput = 'text';
-    $scope.user = $firebaseObject(ref.child('users').child(uid)); 
+    $scope.user = $firebaseObject(ref.child('users').child(uid));
     $scope.course = $firebaseObject(ref.child('courses').child(courseId));
     $scope.lessons = $firebaseArray(ref.child('courses').child(courseId).child('content').orderByChild('order'));
     $scope.tags = $firebaseArray(ref.child('tags'));
@@ -34,6 +34,7 @@ define(['jquery','jqueryUi','angular', 'ngRoute', 'uiAce', 'marked'], function($
     //Compile markdown to HTML
     $scope.compileMarkdown = function() {
       $scope.lesson.data = marked($scope.lesson.markdown);
+      $scope.lesson.$save();
     }
 
     //Save lesson to firebase
