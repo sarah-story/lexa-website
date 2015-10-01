@@ -21,13 +21,13 @@
         <label>Category:</label>
         <select id="tagInput" class="form-control" ng-model="course.tag" ng-change="course.$save()">
           <option value=""></option>
-          <option ng-repeat="tag in tags" value="{{tag.$value}}">{{tag.$value}}</option>
+          <option ng-repeat="tag in tags" ng-value="tag.$value">{{tag.$value}}</option>
         </select>
       </div>
       <button class="btn btn-block" style="background: #3b3a36; color: white; margin-top: 20px;" ng-click="reorder()">Reorder Course Content</button>
     </div>
   </div>
-  
+
   <div class="timelineContainer container">
     <div class="row">
       <div class="col-lg-12">
@@ -123,7 +123,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" ng-click="saveLesson()">Save</button>
-      </div>    
+      </div>
     </div>
   </div>
 </div>
@@ -163,7 +163,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
         <button type="button" class="btn btn-danger" ng-click="lesson.$remove()" data-dismiss="modal">Delete</button>
-      </div>     
+      </div>
     </div>
   </div>
 </div>
@@ -182,7 +182,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" ng-click="saveOrder()" data-dismiss="modal">Save</button>
-      </div>     
+      </div>
     </div>
   </div>
 </div>
